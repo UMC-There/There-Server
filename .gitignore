@@ -41,4 +41,6 @@ out/
 
 ### application.yml ###
 application.yml
+
+# aws iam key
 application-aws.yml
