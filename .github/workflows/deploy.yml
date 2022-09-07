@@ -9,7 +9,7 @@ env:
   AWS_REGION : ap-northeast-2
   S3_BUCKET_NAME: there-deploy
   CODE_DEPLOY_APPLICATION_NAME: There
-  CODE_DEPLOY_DEPLOYMENY_GROUP_NAME: Server-dev
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: Server-dev
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -49,9 +49,9 @@ jobs:
       - name: Deploy to AWS EC2 from S3
         run:
           aws deploy create-deployment
-          --application-name ${{ env.CODE_DEFLOY_APPLICATION_NAME }} \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ env.CODE_DEFLOY_DEFLOYMENT_GROUP_NAME }} \
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
           --s3-location bucket=$S3_BUCKET_NAME,key=$GITHUB_SHA.ZIP,bundleType=zip
           
        
