@@ -1,6 +1,5 @@
 package com.there.src.portfolio;
 
-import com.amazonaws.services.ec2.model.IdFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,14 +31,12 @@ public class PortfolioController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final JwtService jwtService;
     private final PortfolioService portfolioService;
-    private final PortfolioProvider portfolioProvider;
     private final S3Service s3Service;
 
     @Autowired
-    public PortfolioController(JwtService jwtService, PortfolioService portfolioService, PortfolioProvider portfolioProvider, S3Service s3Service) {
+    public PortfolioController(JwtService jwtService, PortfolioService portfolioService, S3Service s3Service) {
         this.jwtService = jwtService;
         this.portfolioService = portfolioService;
-        this.portfolioProvider = portfolioProvider;
         this.s3Service = s3Service;
     }
 
@@ -104,7 +101,7 @@ public class PortfolioController {
     
         try {
 
-            List<GetPortfolioListRes> PortfolioListRes = portfolioProvider.getPortfolioList(userIdx);
+            List<GetPortfolioListRes> PortfolioListRes = portfolioService.getPortfolioList(userIdx);
 
             return new BaseResponse<>(PortfolioListRes);
 
@@ -122,7 +119,7 @@ public class PortfolioController {
     @ResponseBody
     @GetMapping("/pf/{portfolioIdx}")
     public BaseResponse<List<GetPortfolioRes>> getPortfolios (@PathVariable("portfolioIdx") int portfolioIdx) throws BaseException {
-        List<GetPortfolioRes> PortfolioListRes = portfolioProvider.getPortfolios(portfolioIdx);
+        List<GetPortfolioRes> PortfolioListRes = portfolioService.getPortfolios(portfolioIdx);
         return new BaseResponse<>(PortfolioListRes);
 
     }

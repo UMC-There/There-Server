@@ -19,14 +19,11 @@ import static com.there.config.BaseResponseStatus.*;
 public class LikeController {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final LikeProvider likeProvider;
     private final LikeService likeService;
     private final JwtService jwtService;
 
     @Autowired
-    public LikeController(LikeProvider likeProvider, LikeService likeService, JwtService jwtService) {
-
-        this.likeProvider = likeProvider;
+    public LikeController(LikeService likeService, JwtService jwtService) {
         this.likeService = likeService;
         this.jwtService = jwtService;
     }
@@ -62,7 +59,7 @@ public class LikeController {
     @GetMapping("/posts/{postIdx}")
     public BaseResponse<List<GetLikeRes>> selectLikes(@PathVariable("postIdx")int postIdx) {
         try {
-            List<GetLikeRes> getLikes = likeProvider.retrieveLikes(postIdx);
+            List<GetLikeRes> getLikes = likeService.retrieveLikes(postIdx);
             return new BaseResponse<>(getLikes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

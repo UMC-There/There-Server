@@ -2,11 +2,14 @@ package com.there.src.like;
 
 import com.there.config.*;
 import com.there.src.like.model.DeleteLikeReq;
+import com.there.src.like.model.GetLikeRes;
 import com.there.src.like.model.PostLikeReq;
 import com.there.src.like.model.PostLikeRes;
 import com.there.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.there.config.BaseResponseStatus.DATABASE_ERROR;
 
@@ -21,7 +24,17 @@ public class LikeService {
         this.likeDao = likeDao;
         this.jwtService = jwtService;
     }
-    
+
+    // 좋아요 및 감정표현 조회
+    public List<GetLikeRes> retrieveLikes(int postIdx) throws BaseException {
+        try {
+            List<GetLikeRes> getLikes = likeDao.selectLikes(postIdx);
+            return getLikes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     // 좋아요 및 감정표현 생성
     public PostLikeRes createLikes(int userIdx, PostLikeReq postLikeReq) throws BaseException {
         try {

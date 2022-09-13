@@ -21,15 +21,18 @@ import static com.there.config.BaseResponseStatus.*;
 
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/follow")
 public class FollowController {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final FollowService followService;
-    private final FollowProvider followProvider;
     private final JwtService jwtService;
 
+    @Autowired
+    public FollowController(FollowService followService, JwtService jwtService) {
+        this.followService = followService;
+        this.jwtService = jwtService;
+    }
 
     /**
      * 팔로우 API
@@ -95,7 +98,7 @@ public class FollowController {
     @GetMapping("/{userIdx}/followingList")
     public BaseResponse<List<GetFollowerListRes>> getFollowerList
             (@PathVariable("userIdx") int userIdx) throws BaseException {
-        List<GetFollowerListRes> getFollowerListRes = followProvider.FollowerList(userIdx);
+        List<GetFollowerListRes> getFollowerListRes = followService.FollowerList(userIdx);
         return new BaseResponse<>(getFollowerListRes);
     }
 
@@ -112,7 +115,7 @@ public class FollowController {
     @GetMapping("/{userIdx}/followerList")
     public BaseResponse<List<GetFollowingListRes>> getFollowingList
             (@PathVariable("userIdx")int userIdx) throws BaseException {
-        List<GetFollowingListRes> getFollowingListRes = followProvider.FollowingList(userIdx);
+        List<GetFollowingListRes> getFollowingListRes = followService.FollowingList(userIdx);
         return new BaseResponse<>(getFollowingListRes);
     }
 

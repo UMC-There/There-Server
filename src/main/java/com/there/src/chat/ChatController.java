@@ -15,13 +15,10 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.util.ListUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import static com.there.config.BaseResponseStatus.INVALID_USER_JWT;
 
 @Api
 @RestController
@@ -33,18 +30,15 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
 
     private final ChatContentService chatContentService;
-    private final ChatContentProvider chatContentProvider;
     private final ChatRoomService chatRoomService;
-    private final ChatRoomProvider chatRoomProvider;
+
 
     @Autowired
-    public ChatController(SimpMessagingTemplate messagingTemplate, JwtService jwtService, ChatContentService chatContentService, ChatContentProvider chatContentProvider, ChatRoomService chatRoomService, ChatRoomProvider chatRoomProvider) {
-        this.messagingTemplate = messagingTemplate;
+    public ChatController(JwtService jwtService, SimpMessagingTemplate messagingTemplate, ChatContentService chatContentService, ChatRoomService chatRoomService) {
         this.jwtService = jwtService;
+        this.messagingTemplate = messagingTemplate;
         this.chatContentService = chatContentService;
-        this.chatContentProvider = chatContentProvider;
         this.chatRoomService = chatRoomService;
-        this.chatRoomProvider = chatRoomProvider;
     }
 
     @ApiOperation(value="채팅방 생성 API", notes="상대방 프로필에서 메시지 클릭 시 ChatRoom 생성")
@@ -78,7 +72,7 @@ public class ChatController {
             (@PathVariable("userIdx")int userIdx) {
 
         // 채팅방 조회
-        List<GetRoomListRes> getRoomInfoList = chatRoomProvider.retrieveChatRoom(userIdx);
+        List<GetRoomListRes> getRoomInfoList = chatRoomService.retrieveChatRoom(userIdx);
         return new BaseResponse<>(getRoomInfoList);
 
     }
@@ -115,7 +109,7 @@ public class ChatController {
 
         // 메시지 생성 후 가져오기
         int contentIdx = chatContentService.createContent(senderIdx, receiverIdx, messagechatContentReq);
-        MessagechatContentRes messagechatContentRes = chatContentProvider.getChatContent(senderIdx, receiverIdx, contentIdx);
+        MessagechatContentRes messagechatContentRes = chatContentService.getChatContent(senderIdx, receiverIdx, contentIdx);
 
         // 메시지 전달 user/{receiverIdx}
         return messagechatContentRes;
@@ -136,10 +130,10 @@ public class ChatController {
             List<GetChatContentRes> getChatContentList = new ArrayList<GetChatContentRes>();
 
             // 보낸 메시지 조회(senderIdx = 자신 Idx)
-            List<GetChatContentRes> getSendChatContentList = chatContentProvider.retrieveChatContent(roomIdx, senderIdx);
+            List<GetChatContentRes> getSendChatContentList = chatContentService.retrieveChatContent(roomIdx, senderIdx);
 
             // 받은 메시지 조회(senderIdx = 상대방 Idx)
-            List<GetChatContentRes> getReceiveChatContentList = chatContentProvider.retrieveChatContent(roomIdx, receiverIdx);
+            List<GetChatContentRes> getReceiveChatContentList = chatContentService.retrieveChatContent(roomIdx, receiverIdx);
 
             getChatContentList.addAll(getSendChatContentList);
             getChatContentList.addAll(getReceiveChatContentList);

@@ -24,6 +24,36 @@ public class PortfolioService {
     }
 
     /**
+     * Portfolio List 조회
+     * @param userIdx
+     * @return
+     * @throws BaseException
+     */
+    public List<GetPortfolioListRes> getPortfolioList(int userIdx) throws BaseException {
+        try {
+            List<GetPortfolioListRes> getPortfolioListRes = portfolioDao.getPortfolioList(userIdx);
+            return getPortfolioListRes;
+        } catch (Exception exception) {
+            throw new BaseException(GET_FAIL_LIST);
+        }
+    }
+
+    /**
+     * Portfolio 조회
+     * @param portfolioIdx
+     * @return
+     * @throws BaseException
+     */
+    public List<GetPortfolioRes> getPortfolios(int portfolioIdx) throws BaseException {
+        try {
+            List<GetPortfolioRes> getPortfolioRes = portfolioDao.getPortfolios(portfolioIdx);
+            return getPortfolioRes;
+        } catch (Exception exception) {
+            throw new BaseException(GET_FAIL_PORTFOLIO);
+        }
+    }
+
+    /**
      *  Portfolio 생성
      */
     public PostPortfolioRes createPortfolios(int userIdx, PostPortfolioReq postPortfolioReq, List<MultipartFile> MultipartFiles) throws BaseException {
