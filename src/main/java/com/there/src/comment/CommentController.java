@@ -22,16 +22,19 @@ import static com.there.config.BaseResponseStatus.*;
 
 @Api
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/comments")
 public class CommentController {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final CommentProvider commentProvider;
     private final CommentService commentService;
     private final JwtService jwtService;
 
+    @Autowired
+    public CommentController(CommentService commentService, JwtService jwtService) {
+        this.commentService = commentService;
+        this.jwtService = jwtService;
+    }
 
     /**
      * 댓글 생성 API
@@ -80,7 +83,7 @@ public class CommentController {
     public BaseResponse<List<GetCommentListRes>> getCommentList(@PathVariable("postIdx") int postIdx)
             throws BaseException {
 
-        List<GetCommentListRes> getCommentListResList = commentProvider.retrieveComment(postIdx);
+        List<GetCommentListRes> getCommentListResList = commentService.retrieveComment(postIdx);
         return new BaseResponse<>(getCommentListResList);
 
     }
@@ -172,7 +175,7 @@ public class CommentController {
             (@PathVariable("postIdx") int postIdx, @PathVariable("commentIdx") int commentIdx)
             throws BaseException {
 
-        List<GetReCommentListRes> getReCommentListResList = commentProvider.ReComment(postIdx, commentIdx );
+        List<GetReCommentListRes> getReCommentListResList = commentService.ReComment(postIdx, commentIdx );
         return new BaseResponse<>(getReCommentListResList);
 
     }
