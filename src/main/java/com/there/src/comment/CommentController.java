@@ -22,6 +22,7 @@ import static com.there.config.BaseResponseStatus.*;
 
 @Api
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/comments")
 public class CommentController {
 
@@ -29,12 +30,6 @@ public class CommentController {
 
     private final CommentService commentService;
     private final JwtService jwtService;
-
-    @Autowired
-    public CommentController(CommentService commentService, JwtService jwtService) {
-        this.commentService = commentService;
-        this.jwtService = jwtService;
-    }
 
     /**
      * 댓글 생성 API

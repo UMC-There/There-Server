@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import static com.there.config.BaseResponseStatus.EMPTY_TITLE;
 
 @Api
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/portfolios")
 public class PortfolioController {
 
@@ -32,13 +34,6 @@ public class PortfolioController {
     private final JwtService jwtService;
     private final PortfolioService portfolioService;
     private final S3Service s3Service;
-
-    @Autowired
-    public PortfolioController(JwtService jwtService, PortfolioService portfolioService, S3Service s3Service) {
-        this.jwtService = jwtService;
-        this.portfolioService = portfolioService;
-        this.s3Service = s3Service;
-    }
 
     @ApiOperation(value="Portfolio 생성 API", notes="포트폴리오 제목, 대표 사진 반드시 필요")
     @ApiResponses({

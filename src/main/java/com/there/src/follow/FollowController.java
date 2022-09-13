@@ -21,18 +21,13 @@ import static com.there.config.BaseResponseStatus.*;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/follow")
 public class FollowController {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final FollowService followService;
     private final JwtService jwtService;
-
-    @Autowired
-    public FollowController(FollowService followService, JwtService jwtService) {
-        this.followService = followService;
-        this.jwtService = jwtService;
-    }
 
     /**
      * 팔로우 API

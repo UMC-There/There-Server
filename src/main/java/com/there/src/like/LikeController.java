@@ -4,6 +4,7 @@ import com.there.config.*;
 import com.there.src.like.model.*;
 import com.there.utils.JwtService;
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +16,13 @@ import static com.there.config.BaseResponseStatus.*;
 
 @Api
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/likes")
 public class LikeController {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final LikeService likeService;
     private final JwtService jwtService;
-
-    @Autowired
-    public LikeController(LikeService likeService, JwtService jwtService) {
-        this.likeService = likeService;
-        this.jwtService = jwtService;
-    }
 
     /**
      * 좋아요 및 감정표현 생성 API

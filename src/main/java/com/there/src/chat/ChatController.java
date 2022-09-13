@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Api
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatController {
 
@@ -31,15 +33,6 @@ public class ChatController {
 
     private final ChatContentService chatContentService;
     private final ChatRoomService chatRoomService;
-
-
-    @Autowired
-    public ChatController(JwtService jwtService, SimpMessagingTemplate messagingTemplate, ChatContentService chatContentService, ChatRoomService chatRoomService) {
-        this.jwtService = jwtService;
-        this.messagingTemplate = messagingTemplate;
-        this.chatContentService = chatContentService;
-        this.chatRoomService = chatRoomService;
-    }
 
     @ApiOperation(value="채팅방 생성 API", notes="상대방 프로필에서 메시지 클릭 시 ChatRoom 생성")
     @ApiResponses({
