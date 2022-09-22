@@ -1,6 +1,7 @@
 package com.there.src.artistStatement;
 
 import com.there.config.BaseException;
+import com.there.src.artistStatement.model.GetArtistStatementRes;
 import com.there.src.artistStatement.model.PatchArtistStatementReq;
 import com.there.src.artistStatement.model.PostArtistStatementReq;
 import com.there.src.artistStatement.model.PostArtistStatementRes;
@@ -22,33 +23,49 @@ public class ArtistStatementService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final ArtistStatementDao artistStatementDao;
-    private final ArtistStatementProvider artistStatementProvider;
+
+    // 작가노트 조회
+    public GetArtistStatementRes retrieveStatement(int userIdx) throws BaseException {
+        try {
+            if(checkStatementExist(userIdx) == 0) {
+                createDefaultStatement(userIdx);
+            }
+
+            GetArtistStatementRes getArtistStatementRes = artistStatementDao.selectStatement(userIdx);
+
+            return getArtistStatementRes;
+
+        } catch (Exception exception) {
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 
     // 작가노트 작성
-    public PostArtistStatementRes createStatement(int userIdx, PostArtistStatementReq postArtistStatementReq)
-            throws BaseException {
-
-        if(artistStatementProvider.checkStatementExist(userIdx) == 1){
-            throw new BaseException(STATEMENTS_EXIST);
-        }
-
-        try{
-
-            int statementIdx = artistStatementDao.insertStatement(userIdx, postArtistStatementReq);
-            return new PostArtistStatementRes(statementIdx);
-        }
-        catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-
-        }
-    }
+//    public PostArtistStatementRes createStatement(int userIdx, PostArtistStatementReq postArtistStatementReq)
+//            throws BaseException {
+//
+//            if(artistStatementProvider.checkStatementExist(userIdx) == 1){
+//                throw new BaseException(STATEMENTS_EXIST);
+//            }
+//
+//            try{
+//
+//                int statementIdx = artistStatementDao.insertStatement(userIdx, postArtistStatementReq);
+//                return new PostArtistStatementRes(statementIdx);
+//            }
+//            catch (Exception exception) {
+//                throw new BaseException(DATABASE_ERROR);
+//
+//            }
+//    }
 
     // 작가노트 수정
     public void modifyStatement(int userIdx, PatchArtistStatementReq patchArtistStatementReq)
         throws BaseException {
 
-        if(artistStatementProvider.checkStatementExist(userIdx) == 0) {
+        if(checkStatementExist(userIdx) == 0) {
             throw new BaseException(STATEMENTS_EMPTY);
         }
 
@@ -81,7 +98,7 @@ public class ArtistStatementService {
     // 작가노트 삭제
     public void deleteStatement(int userIdx) throws BaseException{
 
-        if(artistStatementProvider.checkStatementExist(userIdx) == 0) {
+        if(checkStatementExist(userIdx) == 0) {
             throw new BaseException(STATEMENTS_EMPTY);
         }
 
@@ -97,5 +114,29 @@ public class ArtistStatementService {
         }
     }
 
+    // 작가노트 체크
+    public int checkStatementExist(int userIdx) throws BaseException {
+        try {
+            return artistStatementDao.checkStatementExist(userIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 작가노트 default 생성
+    public int createDefaultStatement(int userIdx)
+            throws BaseException {
+
+            try{
+
+                int statementIdx = artistStatementDao.insertDefaultStatement(userIdx);
+                return statementIdx;
+            }
+            catch (Exception exception) {
+                throw new BaseException(DATABASE_ERROR);
+
+            }
+    }
 
 }
