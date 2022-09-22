@@ -97,4 +97,16 @@ public class ArtistStatementDao {
         return this.jdbcTemplate.update(deleteStatementQuery, deleteStatementParam);
     }
 
+    // 작가노트 defulat 생성
+    public int insertDefaultStatement(int userIdx) {
+        String insertDefaultStatementQuery = "insert ArtistStatement(userIdx) values(?);";
+        int insertDefaultStatementParam = userIdx;
+
+        this.jdbcTemplate.update(insertDefaultStatementQuery,
+                insertDefaultStatementParam);
+
+        String lastInsertIdxQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdxQuery, int.class);
+
+    }
 }
